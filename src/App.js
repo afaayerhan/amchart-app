@@ -1,54 +1,16 @@
 import './index.css';
-import {data} from './data';
 var React = require("react");
 var ReactDOM = require("react-dom");
-
 var AmCharts = require("amcharts3-react");
 require("amcharts3/amcharts/pie.js");
-export class Main extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentChart: 'PieChart'
-    }
-
-    this.charts = ['BarChart', 'PieChart', 'LineChart'];
-  }
-  renderChart = () => {
-    const {currentChart} = this.state;
-    if (currentChart === 'PieChart') {
-      return <PieChartContainer/>
-    }
-    if (currentChart === 'BarChart') {
-      return <Chart/>
-    }
-    if (currentChart === 'LineChart') {
-      return <LineChart/>
-    }
-  }
-  changeChart = (chart) => {
-    this.setState({currentChart: chart})
-  }
-  render() {
-    return <div style={{
-      width: `100%`,
-      height: `100%`
-    }}>
-      {this
-        .charts
-        .map(chart => <button key={chart} onClick={() => this.changeChart(chart)}>{chart}</button>)}
-      {this.renderChart()}
-    </div>
-  }
-}
-var Chart = React.createClass({
+export var BarChart = React.createClass({
 
   render: function () {
     // Render the chart
     return React.createElement(AmCharts, {
       "type": "serial",
       "theme": "light",
-      "dataProvider": data,
+      "dataProvider": this.props.data,
       "valueAxes": [
         {
           "gridColor": "#FFFFFF",
@@ -91,13 +53,13 @@ var Chart = React.createClass({
     });
   }
 });
-var PieChart = React.createClass({
+export var PieChart = React.createClass({
   render: function () {
     return React.createElement(AmCharts, {
       "type": "pie",
       "theme": "light",
       "path": "node_modules/amcharts3/amcharts",
-      "dataProvider": data,
+      "dataProvider": this.props.data,
       "valueField": this.props.valueField,
       "titleField": "country",
       "balloon": {
@@ -109,19 +71,19 @@ var PieChart = React.createClass({
     })
   }
 })
-class PieChartContainer extends React.Component {
+export class PieChartContainer extends React.Component {
   render() {
     return <div style={{
       width: `100%`,
       height: '100%'
     }}>
-      <PieChart valueField="year2004"/>
-      <PieChart valueField="year2005"/>
+      <PieChart valueField="year2004" data={this.props.data}/>
+      <PieChart valueField="year2005" data={this.props.data}/>
     </div>
 
   }
 }
-var LineChart = React.createClass({
+export var LineChart = React.createClass({
   render() {
     return React.createElement(AmCharts, {
       "type": "serial",
@@ -197,7 +159,7 @@ var LineChart = React.createClass({
       "export": {
         "enabled": true
       },
-      "dataProvider": data
+      "dataProvider": this.props.data
     })
   }
 })
